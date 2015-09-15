@@ -1,0 +1,23 @@
+{
+  "name": "mean-fun",
+  "version": "1.0.0",
+  "description": "Building an appusing the MEAN stack to keep my Node/Angular skills sharp.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpeden/mean-fun.git"
+  },
+  "author": "Ryan Peden",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpeden/mean-fun/issues"
+  },
+  "homepage": "https://github.com/rpeden/mean-fun#readme",
+  "dependencies": {
+    "express": "^4.13.3",
+    "jade": "^1.11.0"
+  }
+}
