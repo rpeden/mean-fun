@@ -1,27 +1,13 @@
 const express = require('express');
-const stylus = require('stylus');
-const logger = require('morgan');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const app = express();
 
-const compile = (str, path) => {
-    return stylus(str).set('filename', path);
+const config = {
+  rootPath: __dirname
 }
-
-app.set('views', `${__dirname}/server/views`);
-app.set('view engine', 'jade');
-app.use(stylus.middleware(
-  {
-    src: `${__dirname}/public`,
-    compile: compile
-  }
-));
-app.use(express.static(`${__dirname}/public`));
-
-
+require('./server/config/express')(app,config);
 //Mongo related items
 mongoose.connect('mongodb://localhost/multivision');
 const db = mongoose.connection;
@@ -30,8 +16,8 @@ db.once('open', () => {
   console.log('multivision db opened');
 })
 
-app.get('/partials/:partialPath', (req,res) => {
-  res.render(`partials/${req.params.partialPath}`);
+app.get('/partials/*', (req,res) => {
+  res.render(`partials/${req.params[0]}`);
 });
 
 app.get('*', (req, res) => {
