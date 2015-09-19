@@ -2,7 +2,8 @@ var express = require('express'),
     logger = require('morgan'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
-    stylus = require('stylus');
+    stylus = require('stylus'),
+    session = require('express-session');
 
 
 module.exports = function(app, config) {
@@ -15,6 +16,8 @@ module.exports = function(app, config) {
   app.use(logger('dev'));
   app.use(cookieParser());
   app.use(bodyParser());
+  app.use(session({secret:'multi vision unicorns'}));
+
   app.use(stylus.middleware(
     {
       src: `${config.rootPath}/public`,
