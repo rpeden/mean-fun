@@ -1,30 +1,42 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy
 
 const env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const app = express();
 
-const config = {
-  rootPath: __dirname
-}
+const config = require('./server/config/config')[env]
 require('./server/config/express')(app,config);
-//Mongo related items
-mongoose.connect('mongodb://localhost/multivision');
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error.'));
-db.once('open', () => {
-  console.log('multivision db opened');
+require('./server/config/mongoose')(config);
+require('./server/config/routes')(app);
+
+const user = mongoose.model('User');
+passport.use(new LocalStrategy( (username, password, done) => {
+  User.findOne({userName: username}).exec( (err, user) => {
+    if(user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+  })
+}));
+
+passport.serializeUser( (user, done) => {
+  if(user) {
+    done(null, user._id);
+  }
+});
+
+passport.deserializeUser( (id, done) => {
+  User.fineOne({_id: id}).exec( (err, user) => {
+    if(user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+  })
 })
+app.listen(config.port)
 
-app.get('/partials/*', (req,res) => {
-  res.render(`partials/${req.params[0]}`);
-});
-
-app.get('*', (req, res) => {
-  res.render('index');
-});
-
-const port = 3030;
-app.listen(port)
-
-console.log(`Listning on port ${port}...`);
+console.log(`Listning on port ${config.port}...`);
