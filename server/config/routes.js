@@ -6,8 +6,11 @@ module.exports = function(app) {
     res.render(`partials/${req.params[0]}`);
   });
 
-app.post('/login', (req, res, next) => {
-  let auth = passport.authenticate('local', (err, user) => {
+app.post('/login', passport.authenticate('local'), (req, res, next) => {
+  console.log("body parsing", req.body);
+  console.log("user is ", req.user);
+  /*let auth = passport.authenticate('local', (err, user) => {
+    console.log("hmm " + user);
     if(err) { return next(err) }
     if(!user) { res.send({success:false}) }
     req.logIn(user, (err) => {
@@ -15,7 +18,7 @@ app.post('/login', (req, res, next) => {
       res.send({success: true, user: user});
     });
   });
-  auth(res, req, next);
+  auth(res, req, next);*/
 })
 
 app.get('*', (req, res) => {

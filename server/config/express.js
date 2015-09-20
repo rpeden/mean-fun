@@ -3,7 +3,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     stylus = require('stylus'),
-    session = require('express-session');
+    session = require('express-session'),
+    passport = require('passport');
 
 
 module.exports = function(app, config) {
@@ -15,8 +16,11 @@ module.exports = function(app, config) {
   app.set('view engine', 'jade');
   app.use(logger('dev'));
   app.use(cookieParser());
-  app.use(bodyParser());
-  app.use(session({secret:'multi vision unicorns'}));
+  app.use(bodyParser.urlencoded({extended: true}));
+  app.use(bodyParser.json());
+  app.use(session({secret: 'multi vision unicorns',resave:false,saveUninitialized:false}));
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.use(stylus.middleware(
     {

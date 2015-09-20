@@ -11,10 +11,12 @@ require('./server/config/express')(app,config);
 require('./server/config/mongoose')(config);
 require('./server/config/routes')(app);
 
-const user = mongoose.model('User');
+const User = mongoose.model('User');
 passport.use(new LocalStrategy( (username, password, done) => {
+  console.log('trying to find user ' + username);
   User.findOne({userName: username}).exec( (err, user) => {
     if(user) {
+      console.log(`found ${username}`)
       return done(null, user);
     } else {
       return done(null, false);
@@ -29,7 +31,7 @@ passport.serializeUser( (user, done) => {
 });
 
 passport.deserializeUser( (id, done) => {
-  User.fineOne({_id: id}).exec( (err, user) => {
+  User.findOne({_id: id}).exec( (err, user) => {
     if(user) {
       return done(null, user);
     } else {
