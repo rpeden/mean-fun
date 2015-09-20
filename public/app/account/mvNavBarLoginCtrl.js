@@ -1,5 +1,9 @@
-angular.module('app').controller('mvNavBarLoginCtrl', function($scope) {
+angular.module('app').controller('mvNavBarLoginCtrl', function($scope, $http) {
   $scope.signin = function(username, password) {
-    console.log("work in progress");
+    $http.post('/login', {username: username, password: password}).then(function(respose){
+      console.log("logged in");
+    }, function(response) {
+      console.log("failed to log in");
+    })
   }
 })
